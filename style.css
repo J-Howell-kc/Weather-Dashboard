@@ -1,0 +1,62 @@
+header {
+    color: white;
+    background-image: linear-gradient(to left, rgb(64, 91, 100) , rgb(38, 38, 112));
+    text-align: center;
+    height: 12vh;
+}
+
+header h1 {
+    padding: 1% 0%;
+}
+
+.left {
+    min-height: 100vh;
+}
+
+.left form {
+    border-bottom: 2px solid black;
+    padding-bottom: 5%;
+    padding-left: 3%;
+}
+
+#historyCities {
+    padding-top: 5%;
+    padding-left: 3%;
+}
+
+.right {
+    min-height: 100vh;
+}
+
+#weatherBlock {
+    border: 2px solid rgb(11, 22, 50); 
+    border-radius: 10px;
+}
+
+.card-body {
+    padding: 0px 20px 20px 20px;
+}
+
+.displayIcon {
+    display: flex;
+}
+
+img {
+    max-height: 50%;
+    max-width: 50%;
+}
+
+#cityDate {
+    margin: 0%;
+    padding: 4% 0% 0% 0%;
+}
+
+#forecastBlock {
+    padding-top: 3%;
+}
+
+.forecastDeck div {
+    background-color: rgb(102, 30, 144);
+    color: white;
+    padding: 1% 1% 2% 1%;
+}
