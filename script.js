@@ -45,7 +45,7 @@ var daysIcon = [day1Icon, day2Icon, day3Icon, day4Icon, day5Icon];
 
 // var for API Key for OpenWeatherMap
 
-var APIKey = "8f1568f1569f75135c444d58e02affc2fc762";
+var APIKey = "a17b8a507cc6dfa84ceb02767483d8f5";
 
 // need to input city
 var userInput = document.getElementById("input");
@@ -60,7 +60,24 @@ right.style.display = "none";
 
 // Make the Geocoding API Call Using Fetch to get city lat and lon
 
-
+function getCity(cityName) {
+    //var requestUrl = "https://api.openweathermap.org/geo/1.0/direct?q=" + cityName + "&limit=1&appid=" + APIKey;
+    var requestUrl =
+      "https://api.openweathermap.org/data/2.5/direct?q=" + /*<-- review this */
+      cityName +
+      "&limit=1&appid=" + /*<-- review this */
+      APIKey;
+    fetch(requestUrl)
+      .then(function (response) {
+        return response.json();
+      })
+      .then(function (data) {
+        console.log(data);
+        var cityLat = data[0].lat; /*<-- review this */
+        var cityLon = data[0].lon; /*<-- review this */ 
+        getWeather(cityName, cityLat, cityLon);
+      });
+  }
  
 
 
@@ -69,7 +86,7 @@ function getWeather(cityName, cityLat, cityLon) {
     var queryURL = "https://api.openweathermap.org/data/2.5/onecall?lat=" + cityLat + "&lon=" + cityLon + "&exclude=hourly,minutely,alerts&units=imperial&appid=" + APIKey;
 
     // to print the inputCity as upper case
-    var printInputCity = cityName.charAt(0).toUpperCase() + cityName.slice(1);
+    //var printInputCity = cityName.charAt(0).toUpperCase() + cityName.slice(1);
 
     fetch(queryURL)
         .then(function (response) {
@@ -97,7 +114,7 @@ function getWeather(cityName, cityLat, cityLon) {
 
         });
 }
-searchButton.click(function () {
+/*searchButton.click(function () {
 
     let searchInput = $(".searchInput").val();
 
@@ -114,6 +131,10 @@ searchButton.click(function () {
             url: urlCurrent,
             method: "GET"
         }).then(function (response) {
+            console.log("done");
+    });
+  }
+});  this code was recommended by an LA */ 
 
 //   for local storage 
 var cityHistory = [];
