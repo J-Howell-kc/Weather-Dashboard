@@ -60,37 +60,16 @@ right.style.display = "none";
 
 // Make the Geocoding API Call Using Fetch to get city lat and lon
 
-function getCity(cityName) {
-    cityName = cityName.trim();
-    // console.log(cityName);
 
-    var requestUrl = "https://api.openweathermap.org/data/2.5/direct?q=" + cityName + "&appid=" + APIKey;
+ 
 
-    fetch(requestUrl)
-
-        .then(function (response) {
-            return response.json();
-        })
-        .then(function (data) {
-            // console.log(data);
-
-            var cityLat = data[0].lat;
-            var cityLon = data[0].lon;
-            // console.log(cityLat);
-            // console.log(cityLon);
-
-            getWeather(cityName, cityLat, cityLon);
-
-
-        });
-} 
 
 //  fetch to make the oneCall API Call to get weather info
 function getWeather(cityName, cityLat, cityLon) {
     var queryURL = "https://api.openweathermap.org/data/2.5/onecall?lat=" + cityLat + "&lon=" + cityLon + "&exclude=hourly,minutely,alerts&units=imperial&appid=" + APIKey;
 
     // to print the inputCity as upper case
-    //var printInputCity = cityName.charAt(0).toUpperCase() + cityName.slice(1);
+    var printInputCity = cityName.charAt(0).toUpperCase() + cityName.slice(1);
 
     fetch(queryURL)
         .then(function (response) {
@@ -118,6 +97,23 @@ function getWeather(cityName, cityLat, cityLon) {
 
         });
 }
+searchButton.click(function () {
+
+    let searchInput = $(".searchInput").val();
+
+    // Variable for current weather working 
+    let urlCurrent = "https://api.openweathermap.org/data/2.5/weather?q=" + searchInput + "&Appid=" + apiKey + "&units=imperial";
+    // Variable for 5 day forecast working
+    let urlFiveDay = "https://api.openweathermap.org/data/2.5/forecast?q=" + searchInput + "&Appid=" + apiKey + "&units=imperial";
+
+
+    if (searchInput == "") {
+        console.log(searchInput);
+    } else {
+        $.ajax({
+            url: urlCurrent,
+            method: "GET"
+        }).then(function (response) {
 
 //   for local storage 
 var cityHistory = [];
@@ -134,7 +130,7 @@ searchButton.addEventListener("click", function (event) {
 
     // return function if inputCity is blank
     if (inputCity === "") {
-        alert("Please enter a city.");
+        alert("Enter a city, ya dingdong!");
         return;
     }
 
@@ -199,6 +195,3 @@ function init() {
 
 // Call init to retrieve data and display upon page load
 init();
-
-
-
