@@ -3,7 +3,7 @@
 var currentTemp = document.getElementById("temp");
 var currentWind = document.getElementById("wind");
 var currentCityDate = document.getElementById("cityDate");
-
+var currentHumidity = document.getElementById("humidity");
 // set current date, variable elements and arrays for 5 days out
 
 var currentDay = moment().format("MM/DD/YYYY");
@@ -61,29 +61,39 @@ right.style.display = "none";
 // Make the Geocoding API Call Using Fetch to get city lat and lon
 
 function getCity(cityName) {
-    //var requestUrl = "https://api.openweathermap.org/geo/1.0/direct?q=" + cityName + "&limit=1&appid=" + APIKey;
+    //var requestUrl = "https://api.openweathermap.org/geo/1.0/direct?q=" + cityName + "&limit=1&appid=a17b8a507cc6dfa84ceb02767483d8f5"
+    //" + APIKey;
     var requestUrl =
-      "https://api.openweathermap.org/data/2.5/direct?q=" + /*<-- review this */
-      cityName +
-      "&limit=1&appid=" + /*<-- review this */
-      APIKey;
+        "https://api.openweathermap.org/data/2.5/weather?q=" + /*<-- review this */
+       cityName +
+        "&limit=1&appid=a17b8a507cc6dfa84ceb02767483d8f5&units=imperial" //+ /*<-- review this */
+     //   APIKey; 
+
     fetch(requestUrl)
-      .then(function (response) {
-        return response.json();
-      })
-      .then(function (data) {
-        console.log(data);
-        var cityLat = data[0].lat; /*<-- review this */
-        var cityLon = data[0].lon; /*<-- review this */ 
-        getWeather(cityName, cityLat, cityLon);
-      });
-  }
- 
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (data) {
+            console.log(data);
+            var cityLat = data.coord.lat; /*<-- review this */
+            var cityLon = data.coord.lon; /*<-- review this */
+            currentCityDate.textContent = cityName + " (" + currentDay + ")";
+            currentTemp.textContent = data.main.temp + "°F";
+            currentWind.textContent = data.wind.speed + " mph";
+            currentHumidity.textContent = data.main.humidity + " %";
+            var icon = document.getElementById("icon");
+            icon.setAttribute("src", "http://openweathermap.org/img/wn/" + data.weather[0].icon + "@2x.png");
+
+            getWeather(cityName, cityLat, cityLon);
+           // console.log(response);
+        });
+}
+
 
 
 //  fetch to make the oneCall API Call to get weather info
 function getWeather(cityName, cityLat, cityLon) {
-    var queryURL = "https://api.openweathermap.org/data/2.5/onecall?lat=" + cityLat + "&lon=" + cityLon + "&exclude=hourly,minutely,alerts&units=imperial&appid=" + APIKey;
+    var queryURL = "https://api.openweathermap.org/data/2.5/forecast?lat=" + cityLat + "&lon=" + cityLon + "&exclude=hourly,minutely,alerts&units=imperial&appid=" + APIKey;
 
     // to print the inputCity as upper case
     //var printInputCity = cityName.charAt(0).toUpperCase() + cityName.slice(1);
@@ -93,23 +103,20 @@ function getWeather(cityName, cityLat, cityLon) {
             return response.json();
         })
         .then(function (data) {
+            console.log(data);
             // to show weather in the main weather box
-            var icon = document.getElementById("icon");
-            icon.setAttribute("src", "http://openweathermap.org/img/wn/" + data.current.weather[0].icon + "@2x.png");
-
-            currentCityDate.textContent = printInputCity + " (" + currentDay + ")";
-            currentTemp.textContent = data.current.temp + "°F";
-            currentWind.textContent = data.current.wind_speed + " MPH";
-            currentHumidity.textContent = data.current.humidity + " %";
 
 
+var index = 0;
             // to show weather in  the forecastBlock array [1] for the tomorrow ... [5] for 5 days later
-            for (var i = 1; i < 6; i++) {
-                days[i - 1].textContent = moment.unix(data.daily[i].dt).format("MM/DD/YYYY");
-                daysTemp[i - 1].textContent = "Temp: " + data.daily[i].temp.day + "°F";
-                daysWind[i - 1].textContent = "Wind: " + data.daily[i].wind_speed + " MPH";
-                daysHum[i - 1].textContent = "Humidity: " + data.daily[i].humidity + " %";
-                var addDaysIcon = daysIcon[i - 1].setAttribute("src", "http://openweathermap.org/img/wn/" + data.daily[i].weather[0].icon + "@2x.png");
+            for (var i = 7; i < 40; i+=7) {
+                days[index].textContent = moment.unix(data.list[i].dt).format("MM/DD/YYYY") 
+                console.log(index);
+              daysTemp[index].textContent = "Temp: " + data.list[i].temp.day + "°F";
+                daysWind[index].textContent = "Wind: " + data.list[i].wind_speed + " MPH";
+                daysHum[index].textContent = "Humidity: " + data.list[i].humidity + " %";
+                var addDaysIcon = daysIcon[i - 1].setAttribute("src", "http://openweathermap.org/img/wn/" + data.daily[i].weather[0].icon + "@2x.png");  
+                index ++
             }
 
         });
@@ -134,7 +141,7 @@ function getWeather(cityName, cityLat, cityLon) {
             console.log("done");
     });
   }
-});  this code was recommended by an LA */ 
+});  this code was recommended by an LA, disregard */
 
 //   for local storage 
 var cityHistory = [];
@@ -151,7 +158,7 @@ searchButton.addEventListener("click", function (event) {
 
     // return function if inputCity is blank
     if (inputCity === "") {
-        alert("Enter a city, ya dingdong!");
+        alert("Enter a city.");
         return;
     }
 
@@ -187,8 +194,6 @@ function renderCityHistory() {
         button.classList.add("btn");
         button.classList.add("btnHistory");
         button.addEventListener("click", function (event) {
-            //
-            event.preventDefault();
 
             right.style.display = "block";
 
