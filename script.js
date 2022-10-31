@@ -96,7 +96,7 @@ function getWeather(cityName, cityLat, cityLon) {
     var queryURL = "https://api.openweathermap.org/data/2.5/forecast?lat=" + cityLat + "&lon=" + cityLon + "&exclude=hourly,minutely,alerts&units=imperial&appid=" + APIKey;
 
     // to print the inputCity as upper case
-    //var printInputCity = cityName.charAt(0).toUpperCase() + cityName.slice(1);
+    var printInputCity = cityName.charAt(0).toUpperCase() + cityName.slice(1);
 
     fetch(queryURL)
         .then(function (response) {
